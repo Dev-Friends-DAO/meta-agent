@@ -12,7 +12,8 @@ Phase 1
 ├─ 1.1 State Storage Layer
 │   ├─ ステートの永続化フォーマット設計
 │   ├─ 3層ストア実装 (Session / Project / Knowledge)
-│   └─ ステートのCRUD API
+│   ├─ ステートのCRUD API
+│   └─ State Retention Policy (time / size / relevance / compression / manual)
 │
 ├─ 1.2 State Extractor
 │   ├─ エージェント応答からのステート抽出
@@ -24,10 +25,24 @@ Phase 1
 │   ├─ コンテキストウィンドウへのフィッティング
 │   └─ エージェント別フォーマッタ
 │
-└─ 1.4 MCP Server
-    ├─ MCPプロトコル実装
-    ├─ Claude Code / Cursor からの接続
-    └─ 基本的なCLIインターフェース
+├─ 1.4 MCP Server
+│   ├─ MCPプロトコル実装
+│   ├─ Claude Code / Cursor からの接続
+│   └─ 基本的なCLIインターフェース
+│
+├─ 1.5 CLI Commands
+│   ├─ meta-agent state list / show <id>
+│   ├─ meta-agent sessions
+│   ├─ meta-agent rules list
+│   ├─ meta-agent cost summary
+│   └─ meta-agent init / status
+│
+└─ 1.6 Dashboard UI
+    ├─ meta-agent ui (ローカルWebサーバー起動)
+    ├─ セッション履歴・アクティブステート表示
+    ├─ 3層ステートの中身と残存期間の可視化
+    ├─ リテンションポリシー状態の表示
+    └─ React + Vite (CLIにバンドル)
 ```
 
 ---

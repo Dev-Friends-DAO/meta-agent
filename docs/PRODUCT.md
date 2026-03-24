@@ -103,6 +103,18 @@ Solves agent state fragmentation with a three-tier architecture:
 - **Project State (mid-term)** — Codebase structure cache, dependency graph, change summaries over recent days, decisions from past sessions
 - **Knowledge State (long-term)** — Project-specific knowledge, user preferences and feedback history, accumulated rules and constraints
 
+**State Retention Policy** — Each tier's lifecycle is user-configurable:
+
+| Strategy | Description |
+|----------|-------------|
+| **Time-based** | Auto-expire after a duration (e.g., session: 24h, project: 30d) |
+| **Size-based** | Evict oldest entries when exceeding a max count |
+| **Relevance-based** | Remove entries not referenced within a given period |
+| **Compression** | Summarize raw data after a threshold, discard originals but keep the summary |
+| **Manual** | User explicitly manages retention |
+
+All strategies are composable. Users can combine multiple strategies per tier (e.g., "compress after 7 days, delete after 30 days, max 500 entries"). Defaults are provided but fully overridable.
+
 #### 2. Context Compiler
 
 Assembles the optimal context for a given agent at a given moment, from all State layers + rules + optimization strategy.
@@ -180,6 +192,49 @@ Configurable via presets (accurate / fast / cheap / balanced) or custom ratios. 
 | Context continuity | None | None | None | None | **Context Compiler** |
 | Approach | Naming convention | Static gen | Static gen | Static gen | **Runtime governance** |
 
+### Adjacent Projects
+
+Projects that overlap with individual aspects of Meta Agent but do not combine them:
+
+**Orchestration**
+
+| Project | What It Does | Gap |
+|---------|-------------|-----|
+| [MCO](https://github.com/mco-org/mco) | Dispatches prompts to multiple agent CLIs in parallel, aggregates results | No persistent state, no governance, no context compilation |
+| [Composio Agent-Orchestrator](https://github.com/ComposioHQ/agent-orchestrator) | Spawns parallel coding agents in isolated worktrees | Not a meta-layer across tools, no governance policies |
+| [Agent-MCP](https://github.com/rinadelph/Agent-MCP) | Multi-agent coordination through MCP with shared memory bank | Framework-specific, not cross-tool |
+
+**Session Management**
+
+| Project | What It Does | Gap |
+|---------|-------------|-----|
+| [ccmanager](https://github.com/kbwo/ccmanager) | Copies session data across worktrees for multiple AI CLIs | No governance, no consensus, no context compilation |
+| [Agent Deck](https://github.com/asheshgoplani/agent-deck) | TUI for managing multiple AI agent sessions | No persistent state or governance |
+
+**Persistent Memory / State**
+
+| Project | What It Does | Gap |
+|---------|-------------|-----|
+| [memctl](https://memctl.com) | Branch-aware persistent memory for AI coding agents via MCP | No governance, no multi-agent consensus |
+| [Mem0 / OpenMemory](https://mem0.ai/openmemory) | Universal memory layer for AI agents with MCP server | General-purpose, not a governance layer |
+| [ContextStream](https://contextstream.io/) | Cloud-based persistent memory with semantic search | No governance, no multi-agent coordination |
+| [AgentKits Memory](https://www.agentkits.net/memory) | Local persistent memory via MCP + SQLite | Local-only, no multi-agent coordination |
+
+**Context Engineering**
+
+| Project | What It Does | Gap |
+|---------|-------------|-----|
+| [Aura (Auralith)](https://aura.auralith.org) | "Universal Context Compiler" with 3-tier memory | Document-focused, not a runtime governance layer |
+| [HumanLayer ACE](https://github.com/humanlayer/advanced-context-engineering-for-coding-agents) | Context engineering methodology for coding agents | Methodology/IDE, not a runtime layer |
+
+**Runtime Governance**
+
+| Project | What It Does | Gap |
+|---------|-------------|-----|
+| [Microsoft Agent-Governance-Toolkit](https://github.com/microsoft/agent-governance-toolkit) | Policy enforcement, zero-trust identity, sandboxing | Security/compliance-focused, not coding workflows |
+
+**Key Finding**: No existing project combines runtime governance + persistent state management + context compilation + multi-agent consensus for AI coding workflows as a unified meta-layer. Individual pieces exist across 15+ projects, but the integration is unoccupied.
+
 ---
 
 ## Technology
@@ -224,3 +279,32 @@ Cursor ───────────────→ MCP Server (core)
 | curl installer | `curl -fsSL ... \| sh` | macOS / Linux |
 
 All binaries are built automatically via GitHub Actions CI. Cross-compiled from a single codebase using `bun build --compile --target`.
+
+### Monorepo Structure
+
+```
+meta-agent/
+├─ packages/
+│   ├─ core/          # State Manager, Context Compiler, Rule Engine
+│   ├─ mcp-server/    # MCP Server
+│   ├─ cli/           # CLI commands
+│   └─ ui/            # Dashboard (React + Vite)
+├─ docs/
+├─ package.json       # Bun workspace root
+└─ README.md
+```
+
+### CLI Commands and Dashboard
+
+Everything visible in the dashboard is also accessible via CLI commands. The dashboard is a visual layer over the same data source.
+
+```
+meta-agent state list          # List all state entries
+meta-agent state show <id>     # Show a specific state entry
+meta-agent sessions            # List session history
+meta-agent rules list          # List active rules and scoping
+meta-agent cost summary        # Token usage and cost tracking
+meta-agent ui                  # Launch dashboard in browser
+```
+
+`meta-agent ui` starts a local web server (Bun built-in HTTP) and opens the dashboard. The frontend (React + Vite) is bundled into the CLI binary — no separate install required.
