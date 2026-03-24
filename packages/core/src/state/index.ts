@@ -1,9 +1,13 @@
-export { StateStore, KnowledgeStore, DEFAULT_RETENTION } from "./state/index.ts";
+export { StateStore } from "./store.ts";
+export { KnowledgeStore } from "./knowledge.ts";
+export { SCHEMA_STATEMENTS } from "./schema.ts";
 export type {
   SessionStateType,
   ProjectStateType,
   RetentionAction,
   RetentionStrategy,
+} from "./schema.ts";
+export type {
   StateEntry,
   SessionStateEntry,
   ProjectStateEntry,
@@ -12,4 +16,5 @@ export type {
   RetentionPolicy,
   RetentionConfig,
   RetentionLogEntry,
-} from "./state/index.ts";
+} from "./types.ts";
+export { DEFAULT_RETENTION } from "./types.ts";
