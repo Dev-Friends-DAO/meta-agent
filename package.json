@@ -1,0 +1,7 @@
+{
+  "name": "meta-agent",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ]
+}

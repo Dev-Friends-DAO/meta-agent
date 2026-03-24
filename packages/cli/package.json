@@ -1,0 +1,14 @@
+{
+  "name": "@meta-agent/cli",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "bin": {
+    "meta-agent": "src/index.ts"
+  },
+  "dependencies": {
+    "@meta-agent/core": "workspace:*",
+    "@meta-agent/mcp-server": "workspace:*"
+  }
+}

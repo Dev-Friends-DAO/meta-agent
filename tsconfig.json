@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "outDir": "dist",
+    "declaration": true,
+    "paths": {
+      "@meta-agent/core": ["./packages/core/src"],
+      "@meta-agent/mcp-server": ["./packages/mcp-server/src"],
+      "@meta-agent/cli": ["./packages/cli/src"],
+      "@meta-agent/ui": ["./packages/ui/src"]
+    }
+  },
+  "include": ["packages/*/src/**/*.ts"]
+}

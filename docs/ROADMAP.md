@@ -10,25 +10,25 @@ A runtime governance layer for AI coding agents. Unified state management and co
 Phase 1
 │
 ├─ 1.1 State Storage Layer
-│   ├─ ステートの永続化フォーマット設計
-│   ├─ 3層ストア実装 (Session / Project / Knowledge)
-│   ├─ ステートのCRUD API
+│   ├─ Design state persistence format
+│   ├─ Implement 3-tier store (Session / Project / Knowledge)
+│   ├─ State CRUD API
 │   └─ State Retention Policy (time / size / relevance / compression / manual)
 │
 ├─ 1.2 State Extractor
-│   ├─ エージェント応答からのステート抽出
-│   ├─ git diff / file change の自動取り込み
-│   └─ ユーザー意図・決定事項の構造化
+│   ├─ Extract state from agent responses
+│   ├─ Auto-ingest git diff / file changes
+│   └─ Structure user intent and decisions
 │
 ├─ 1.3 Context Compiler
-│   ├─ ステートからの関連情報抽出アルゴリズム
-│   ├─ コンテキストウィンドウへのフィッティング
-│   └─ エージェント別フォーマッタ
+│   ├─ Relevance extraction algorithm from state
+│   ├─ Context window fitting
+│   └─ Agent-specific formatters
 │
 ├─ 1.4 MCP Server
-│   ├─ MCPプロトコル実装
-│   ├─ Claude Code / Cursor からの接続
-│   └─ 基本的なCLIインターフェース
+│   ├─ MCP protocol implementation
+│   ├─ Claude Code / Cursor connectivity
+│   └─ Basic CLI interface
 │
 ├─ 1.5 CLI Commands
 │   ├─ meta-agent state list / show <id>
@@ -38,11 +38,11 @@ Phase 1
 │   └─ meta-agent init / status
 │
 └─ 1.6 Dashboard UI
-    ├─ meta-agent ui (ローカルWebサーバー起動)
-    ├─ セッション履歴・アクティブステート表示
-    ├─ 3層ステートの中身と残存期間の可視化
-    ├─ リテンションポリシー状態の表示
-    └─ React + Vite (CLIにバンドル)
+    ├─ meta-agent ui (launch local web server)
+    ├─ Session history and active state display
+    ├─ 3-tier state contents and remaining TTL visualization
+    ├─ Retention policy status display
+    └─ React + Vite (bundled into CLI)
 ```
 
 ---
@@ -53,19 +53,19 @@ Phase 1
 Phase 1.5
 │
 ├─ 1.5.1 Entry Point Manager
-│   ├─ 独自エントリーポイント (.meta-agent/)
-│   ├─ モード選択: mirror（既存ファイル維持）/ hub-only（独自のみ）
-│   └─ 既存 CLAUDE.md / AGENTS.md 等の自動検出
+│   ├─ Dedicated entry point (.meta-agent/)
+│   ├─ Mode selection: mirror (preserve existing files) / hub-only (single entry point)
+│   └─ Auto-detect existing CLAUDE.md / AGENTS.md / etc.
 │
 ├─ 1.5.2 Instruction Registry
-│   ├─ AIドキュメントの動的追加・削除
-│   ├─ プラグイン的なインストラクション管理
-│   └─ バージョン管理・差分追跡
+│   ├─ Dynamic add/remove of AI documents
+│   ├─ Plugin-style instruction management
+│   └─ Version control and diff tracking
 │
 └─ 1.5.3 Primary Source Designation
-    ├─ primary AIの指定（どのツール向けインストラクションが正規か）
-    ├─ 衝突時の解決ルール（primaryの記述が勝つ）
-    └─ ツール別オーバーライド
+    ├─ Designate primary AI (which tool's instructions are authoritative)
+    ├─ Conflict resolution rules (primary's content wins)
+    └─ Per-tool overrides
 ```
 
 ---
@@ -76,19 +76,19 @@ Phase 1.5
 Phase 2
 │
 ├─ 2.1 Rule Schema
-│   ├─ ルールの型定義 (constraint / preference / context / skill)
-│   ├─ スコーピング条件 (glob, 言語, タスク種別)
-│   └─ 優先度モデル
+│   ├─ Rule type definitions (constraint / preference / context / skill)
+│   ├─ Scoping conditions (glob, language, task type)
+│   └─ Priority model
 │
 ├─ 2.2 Runtime Resolver
-│   ├─ 現在のコンテキストに適用されるルールの動的解決
-│   ├─ ルール間の衝突検出と解決
-│   └─ State Manager との統合
+│   ├─ Dynamic resolution of applicable rules based on current context
+│   ├─ Inter-rule conflict detection and resolution
+│   └─ State Manager integration
 │
 └─ 2.3 Compatibility Layer
-    ├─ AGENTS.md / CLAUDE.md / .cursorrules の読み込み
-    ├─ 既存フォーマットへのエクスポート
-    └─ 既存プロジェクトからのマイグレーションツール
+    ├─ Read AGENTS.md / CLAUDE.md / .cursorrules
+    ├─ Export to existing formats
+    └─ Migration tool for existing projects
 ```
 
 ---
@@ -102,20 +102,20 @@ Phase 3
 │   ├─ Claude API adapter
 │   ├─ OpenAI API adapter
 │   ├─ Gemini API adapter
-│   └─ Local LLM adapter (Ollama等)
+│   └─ Local LLM adapter (Ollama, etc.)
 │
 ├─ 3.2 Consensus Patterns
-│   ├─ Dictator (単一master — 実行時に誰が最終判断するか)
-│   ├─ Validator (実装+検証)
-│   ├─ Quorum (合議制)
-│   ├─ Pipeline (直列処理)
-│   ├─ Specialist (専門家委員会)
-│   └─ Auction (競争入札)
+│   ├─ Dictator (single master — who makes the final call at runtime)
+│   ├─ Validator (implement + verify)
+│   ├─ Quorum (majority vote)
+│   ├─ Pipeline (sequential stages)
+│   ├─ Specialist (expert committee)
+│   └─ Auction (competitive bidding)
 │
 └─ 3.3 Orchestrator
-    ├─ パターンに基づくタスク分配
-    ├─ エージェント間のコンテキスト受け渡し
-    └─ 結果の統合・最終出力生成
+    ├─ Pattern-based task distribution
+    ├─ Cross-agent context handoff
+    └─ Result aggregation and final output generation
 ```
 
 ---
@@ -126,19 +126,19 @@ Phase 3
 Phase 4
 │
 ├─ 4.1 Cost Tracker
-│   ├─ トークン使用量の追跡
-│   ├─ モデル別コスト計算
-│   └─ 予算制約の適用
+│   ├─ Token usage tracking
+│   ├─ Per-model cost calculation
+│   └─ Budget constraint enforcement
 │
 ├─ 4.2 Routing Engine
-│   ├─ 3軸最適化 (accuracy / cost / speed)
-│   ├─ タスク分類器 (タスク特性→最適モデル)
-│   └─ ユーザー設定に基づく動的ルーティング
+│   ├─ 3-axis optimization (accuracy / cost / speed)
+│   ├─ Task classifier (task characteristics → optimal model)
+│   └─ Dynamic routing based on user settings
 │
 └─ 4.3 Analytics
-    ├─ セッション分析ダッシュボード
-    ├─ モデル別パフォーマンス比較
-    └─ 最適化推奨の自動生成
+    ├─ Session analysis dashboard
+    ├─ Per-model performance comparison
+    └─ Auto-generated optimization recommendations
 ```
 
 ---
@@ -179,16 +179,16 @@ Phase 4
 ## Optimization Tradeoff
 
 ```
-                    Accuracy（思考最適化）
+                    Accuracy
                         ▲
                        ╱ ╲
                       ╱   ╲
                      ╱     ╲
-                    ╱  ユーザーが ╲
-                   ╱   この空間の  ╲
-                  ╱    どこに立つか  ╲
-                 ╱      選択する     ╲
-                ╱                     ╲
-               ▼─────────────────────▶
-          Cost（コスト最適化）    Speed（レイテンシ最適化）
+                    ╱ User   ╲
+                   ╱ chooses  ╲
+                  ╱  position  ╲
+                 ╱   in this    ╲
+                ╱     space      ╲
+               ▼─────────────────▶
+            Cost               Speed
 ```

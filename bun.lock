@@ -1,0 +1,47 @@
+{
+  "lockfileVersion": 1,
+  "configVersion": 1,
+  "workspaces": {
+    "": {
+      "name": "meta-agent",
+    },
+    "packages/cli": {
+      "name": "@meta-agent/cli",
+      "version": "0.0.1",
+      "bin": {
+        "meta-agent": "src/index.ts",
+      },
+      "dependencies": {
+        "@meta-agent/core": "workspace:*",
+        "@meta-agent/mcp-server": "workspace:*",
+      },
+    },
+    "packages/core": {
+      "name": "@meta-agent/core",
+      "version": "0.0.1",
+    },
+    "packages/mcp-server": {
+      "name": "@meta-agent/mcp-server",
+      "version": "0.0.1",
+      "dependencies": {
+        "@meta-agent/core": "workspace:*",
+      },
+    },
+    "packages/ui": {
+      "name": "@meta-agent/ui",
+      "version": "0.0.1",
+      "dependencies": {
+        "@meta-agent/core": "workspace:*",
+      },
+    },
+  },
+  "packages": {
+    "@meta-agent/cli": ["@meta-agent/cli@workspace:packages/cli"],
+
+    "@meta-agent/core": ["@meta-agent/core@workspace:packages/core"],
+
+    "@meta-agent/mcp-server": ["@meta-agent/mcp-server@workspace:packages/mcp-server"],
+
+    "@meta-agent/ui": ["@meta-agent/ui@workspace:packages/ui"],
+  }
+}
